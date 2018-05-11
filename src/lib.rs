@@ -15,12 +15,12 @@ extern {
 }
 
 #[wasm_bindgen]
-pub fn get_value(value: &str) {
+pub fn get_value(value: String) {
 	let n = 64;
-	// let mut rng = OsRng::new().unwrap();
+	let mut rng = rand::thread_rng();
 	let v: u64 = value.parse().unwrap();
 	// let v_blinding = Scalar::random(&mut rng);
-	let generators = Generators::new(PedersenGenerators::default(), n, 1);
+	// let generators = Generators::new(PedersenGenerators::default(), n, 1);
 	// let mut transcript = ProofTranscript::new(b"RangeproofTest");
 	// let proof = RangeProof::generate_proof(
 	//     generators.share(0),
@@ -31,7 +31,7 @@ pub fn get_value(value: &str) {
 	//     &v_blinding,
 	// );
 
-	alert(&format!("made a proof with value: {}", value))
+	alert(&format!("made a proof with value: {:?}", value))
 
 	// let commit_v = PedersenGenerators::default().commit(Scalar::from_u64(v), v_blinding);
 	// let result = proof.verify(&commit_v, generators.share(0), &mut transcript, &mut rng, n);

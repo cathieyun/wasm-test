@@ -67,11 +67,7 @@ function setGlobalArgument(arg, i) {
 export function get_value(arg0) {
     const [ptr0, len0] = passStringToWasm(arg0);
     setGlobalArgument(len0, 0);
-    try {
-        return wasm.get_value(ptr0);
-    } finally {
-        wasm.__wbindgen_free(ptr0, len0 * 1);
-    }
+    return wasm.get_value(ptr0);
 }
 
 let slab = [];

@@ -1,9 +1,9 @@
-const js = import("./js_hello_world");
+const js_hello_world = import("./js_hello_world");
 
 const submitButton = document.getElementById("submitButton");
 
 submitButton.addEventListener("click", event => {
-	js.then(js => {
+	js_hello_world.then(js => {
 	  js.get_value(document.getElementById("inputValue").value);
 	});
 });
