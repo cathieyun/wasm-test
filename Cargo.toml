@@ -1,0 +1,13 @@
+[package]
+name = "js-hello-world"
+version = "0.1.0"
+authors = ["Cathie <cathie@chain.com>"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+curve25519-dalek = { version = "^0.16" , features = ["serde", "nightly"] }
+ristretto-bulletproofs = { git = "https://github.com/chain/ristretto-bulletproofs" }
+rand = "^0.4"
