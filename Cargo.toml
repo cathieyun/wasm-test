@@ -7,7 +7,7 @@ authors = ["Cathie <cathie@chain.com>", "Henry de Valence <hdevalence@hdevalence
 crate-type = ["cdylib"]
 
 [dependencies]
-wasm-bindgen = "0.2"
+wasm-bindgen = "=0.2.8"
 curve25519-dalek = { version = "^0.16" , features = ["serde", "nightly"] }
 ristretto-bulletproofs = { git = "https://github.com/chain/ristretto-bulletproofs", branch = "main" }
 rand = "0.4"
