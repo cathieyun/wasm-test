@@ -4,7 +4,6 @@ extern crate ristretto_bulletproofs;
 extern crate rand;
 extern crate curve25519_dalek;
 
-use rand::OsRng;
 use wasm_bindgen::prelude::*;
 use ristretto_bulletproofs::*;
 use curve25519_dalek::scalar::Scalar;
