@@ -4,18 +4,20 @@ extern crate rand;
 extern crate ristretto_bulletproofs;
 extern crate wasm_bindgen;
 
+use curve25519_dalek::constants;
 use curve25519_dalek::scalar::Scalar;
 use ristretto_bulletproofs::*;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 extern "C" {
-    fn alert(s: &str);
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(msg: &str);
 }
 
 #[wasm_bindgen]
 pub fn get_value(value: String) {
-    let n = 64;
+    let n = 32;
     // INSECURE
     let mut rng = rand::ChaChaRng::new_unseeded();
     rng.set_counter(0xbad, 0xbad);
@@ -23,25 +25,26 @@ pub fn get_value(value: String) {
     let v: u64 = value.parse().unwrap();
 
     let v_blinding = Scalar::random(&mut rng);
-    alert(&format!("v_blinding: {:?}", v_blinding));
+    log(&format!("v_blinding: {:?}", v_blinding));
 
-    // let generators = Generators::new(PedersenGenerators::default(), n, 1);
-    // let mut transcript = ProofTranscript::new(b"RangeproofTest");
-    // let proof = RangeProof::generate_proof(
-    //     generators.share(0),
-    //     &mut transcript,
-    //     &mut rng,
-    //     n,
-    //     v,
-    //     &v_blinding,
-    // );
+    let generators = Generators::new(PedersenGenerators::default(), n, 1);
+    let mut transcript = ProofTranscript::new(b"RangeproofTest");
 
-    alert(&format!("made a proof with value: {:?}", value));
+    let proof = RangeProof::prove_single(&generators, &mut transcript, &mut rng, v, &v_blinding, n)
+        .unwrap();
 
-    // let commit_v = PedersenGenerators::default().commit(Scalar::from_u64(v), v_blinding);
-    // let result = proof.verify(&commit_v, generators.share(0), &mut transcript, &mut rng, n);
-    // match result {
-    // 	Ok(_) => alert(&format!("Your value verified correctly: {}", value)),
-    // 	Err(_) => alert(&format!("Your value did not verify correctly: {}", value)),
-    // }
+    log(&format!("made a proof: {:?}", proof));
+
+    let commit_v = generators
+        .pedersen_generators
+        .commit(Scalar::from_u64(v), v_blinding);
+    log(&format!("commitment to v: {:?}", commit_v.compress()));
+
+    /*
+    let result = proof.verify_single(&commit_v, &generators, &mut transcript, &mut rng, n);
+    match result {
+    	Ok(_) => log(&format!("Your value verified correctly: {}", value)),
+    	Err(_) => log(&format!("Your value did not verify correctly: {}", value)),
+    }
+    */
 }
