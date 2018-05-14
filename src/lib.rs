@@ -17,7 +17,7 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn get_value(value: String) {
-    let n = 32;
+    let n = 16;
     // INSECURE
     let mut rng = rand::ChaChaRng::new_unseeded();
     rng.set_counter(0xbad, 0xbad);
@@ -48,11 +48,8 @@ pub fn get_value(value: String) {
 
     let mut verifier_transcript = ProofTranscript::new(b"RangeproofTest");
     let result = proof.verify_single(&V, &generators, &mut verifier_transcript, &mut rng, n);
-    log(&format!("result: {:?}", result));
-    /*
     match result {
     	Ok(_) => log(&format!("Your value verified correctly: {}", value)),
     	Err(_) => log(&format!("Your value did not verify correctly: {}", value)),
     }
-    */
 }
