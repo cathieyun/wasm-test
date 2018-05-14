@@ -28,20 +28,28 @@ pub fn get_value(value: String) {
     log(&format!("v_blinding: {:?}", v_blinding));
 
     let generators = Generators::new(PedersenGenerators::default(), n, 1);
-    let mut transcript = ProofTranscript::new(b"RangeproofTest");
+    let mut prover_transcript = ProofTranscript::new(b"RangeproofTest");
 
-    let proof = RangeProof::prove_single(&generators, &mut transcript, &mut rng, v, &v_blinding, n)
-        .unwrap();
+    let proof = RangeProof::prove_single(
+        &generators,
+        &mut prover_transcript,
+        &mut rng,
+        v,
+        &v_blinding,
+        n,
+    ).unwrap();
 
     log(&format!("made a proof: {:?}", proof));
 
-    let commit_v = generators
+    let V = generators
         .pedersen_generators
         .commit(Scalar::from_u64(v), v_blinding);
-    log(&format!("commitment to v: {:?}", commit_v.compress()));
+    log(&format!("V: {:?}", V.compress()));
 
+    let mut verifier_transcript = ProofTranscript::new(b"RangeproofTest");
+    let result = proof.verify_single(&V, &generators, &mut verifier_transcript, &mut rng, n);
+    log(&format!("result: {:?}", result));
     /*
-    let result = proof.verify_single(&commit_v, &generators, &mut transcript, &mut rng, n);
     match result {
     	Ok(_) => log(&format!("Your value verified correctly: {}", value)),
     	Err(_) => log(&format!("Your value did not verify correctly: {}", value)),
